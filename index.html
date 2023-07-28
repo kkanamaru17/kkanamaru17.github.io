@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Click Tracker</title>
+  <link rel="stylesheet" href="https://kkanamaru17.github.io/heartbeat/style.css"/>
+</head>
+<body>
+  <h1>Button Click Tracker</h1>
+  <div>
+    <button onclick="recordClick('食事')">食事</button>
+    <button onclick="recordClick('飲酒')">飲酒</button>
+    <button onclick="recordClick('就寝')">就寝</button>
+    <button onclick="recordClick('起床')">起床</button>
+    <button onclick="recordClick('トイレ')">トイレ</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>タイプ</th>
+        <th>時間</th>
+      </tr>
+    </thead>
+    <tbody id="clickRecords">
+      <!-- Records will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <script>
+    function recordClick(label) {
+      const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const tableRow = document.createElement('tr');
+      const typeCell = document.createElement('td');
+      const timeCell = document.createElement('td');
+
+      typeCell.className = 'editable-cell';
+      timeCell.className = 'editable-cell';
+
+      typeCell.innerHTML = `<div class="editable" onclick="editType(this)">${label}</div>`;
+      timeCell.textContent = currentTime;
+      tableRow.appendChild(typeCell);
+      tableRow.appendChild(timeCell);
+
+      const clickRecordsTable = document.getElementById('clickRecords');
+      clickRecordsTable.appendChild(tableRow);
+    }
+
+    function editType(cell) {
+      const existingType = cell.textContent;
+      const types = ["食事", "飲酒", "就寝", "起床", "トイレ"];
+
+      const selectInput = document.createElement('select');
+      types.forEach((type) => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        if (type === existingType) {
+          option.selected = true;
+        }
+        selectInput.appendChild(option);
+      });
+
+      cell.innerHTML = '';
+      cell.appendChild(selectInput);
+      selectInput.focus();
+
+      selectInput.addEventListener('change', () => {
+        const selectedType = selectInput.value;
+        cell.innerHTML = `<div class="editable" onclick="editType(this)">${selectedType}</div>`;
+      });
+
+      selectInput.addEventListener('blur', () => {
+        const selectedType = selectInput.value;
+        cell.innerHTML = `<div class="editable" onclick="editType(this)">${selectedType}</div>`;
+      });
+    }
+  </script>
+</body>
+</html>
